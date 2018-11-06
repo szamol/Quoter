@@ -1,6 +1,8 @@
 package com.example.szamol.quoter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 
 import java.io.BufferedReader;
@@ -15,11 +17,23 @@ public class Character {
     private Drawable image;
     private Context mainContext;
 
-    Character(String name, Context mainContext) {
-        key = name;
+    SharedPreferences preferences;
+
+    Character(Context mainContext) {
+        this.mainContext = mainContext;
+        preferences = mainContext.getSharedPreferences("characterPreferences", Activity.MODE_PRIVATE);
+        sentence = preferences.getString("oldSentence", "Odbierz cytat klikając przycisk!");
+        key = preferences.getString("oldKey", "gandhi");
+        setImage();
+    }
+
+    Character(String key, Context mainContext) {
+        preferences = mainContext.getSharedPreferences("characterPreferences", Activity.MODE_PRIVATE);
+        this.key = key;
         this.mainContext = mainContext;
         setImage();
         setSentence();
+        saveCharacter();
     }
 
     private void setImage() {
@@ -31,10 +45,11 @@ public class Character {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(mainContext.getAssets().open(key + ".txt")));
             int sentenceNumber = chooseRandomSentence();
-            for(int i = 0; i<sentenceNumber-1;i++) br.readLine();
+            for (int i = 0; i < sentenceNumber - 1; i++) br.readLine();
             sentence = br.readLine();
             br.close();
-        }catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 
     private int chooseRandomSentence() {
@@ -47,18 +62,26 @@ public class Character {
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(mainContext.getAssets().open(key + ".txt")));
-            while(br.readLine() != null) result++;
+            while (br.readLine() != null) result++;
             br.close();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
 
         return result;
+    }
+
+    private void saveCharacter() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("oldSentence", sentence);
+        editor.putString("oldKey", key);
+        editor.apply();
     }
 
     public Drawable getImage() {
         return image;
     }
 
-    public String getSentence(){
+    public String getSentence() {
         return sentence;
     }
 

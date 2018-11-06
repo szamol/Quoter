@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="173dp"
-        android:text="TextView" />
+        android:text="Odbierz cytat klikając przycisk!" />
 
     <Button
         android:id="@+id/recieveButton"
@@ -25,7 +25,8 @@
         android:layout_marginStart="43dp"
         android:layout_marginLeft="43dp"
         android:layout_marginBottom="79dp"
-        android:text="Button" />
+        android:text="Odbierz cytat"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/characterView"
