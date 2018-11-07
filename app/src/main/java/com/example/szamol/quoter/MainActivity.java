@@ -1,6 +1,5 @@
 package com.example.szamol.quoter;
 
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +11,9 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView characterView;
+    TextView nameView;
     TextView sentenceView;
+    ImageView characterView;
     Button receiveButton;
     CharacterManager characterManager;
 
@@ -24,15 +24,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        characterView = findViewById(R.id.characterView);
+        nameView = findViewById(R.id.nameView);
         sentenceView = findViewById(R.id.sentenceView);
+        characterView = findViewById(R.id.characterView);
         receiveButton = findViewById(R.id.recieveButton);
-        characterManager = new CharacterManager(this);
+
+        characterManager = new CharacterManager();
+        loadSavedCharacter();
 
         preferences = getSharedPreferences("lastReceive", Activity.MODE_PRIVATE);
-
-        loadOldCharacter();
-
         receiveButton.setEnabled(isNewSentenceAvailable()); //button enabled ever 20 sec (draft)
 
         receiveButton.setOnClickListener(new View.OnClickListener() {
@@ -50,21 +50,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        characterManager.loadOldCharacter();
+        loadSavedCharacter();
         receiveButton.setEnabled(isNewSentenceAvailable());
         super.onResume();
     }
 
     private void loadNewCharacter() {
-        characterManager.chooseNewCharacter();
-        characterView.setImageDrawable(characterManager.getCharacterImage());
+        characterManager.setCharacterStrategy(new NewCharacter(getApplicationContext()));
+        nameView.setText(characterManager.getCharacterName());
         sentenceView.setText(characterManager.getCharacterSentence());
+        characterView.setImageDrawable(characterManager.getCharacterImage());
     }
 
-    private void loadOldCharacter() {
-        characterManager.loadOldCharacter();
-        characterView.setImageDrawable(characterManager.getCharacterImage());
+    private void loadSavedCharacter() {
+        characterManager.setCharacterStrategy(new SavedCharacter(getApplicationContext()));
+        nameView.setText(characterManager.getCharacterName());
         sentenceView.setText(characterManager.getCharacterSentence());
+        characterView.setImageDrawable(characterManager.getCharacterImage());
     }
 
     private boolean isNewSentenceAvailable() {

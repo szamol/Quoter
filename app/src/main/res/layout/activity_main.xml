@@ -39,4 +39,13 @@
         android:layout_marginRight="0dp"
         android:layout_marginBottom="-79dp"
         app:srcCompat="@drawable/chaplin" />
+
+    <TextView
+        android:id="@+id/nameView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:gravity="center" />
 </RelativeLayout>
