@@ -1,6 +1,8 @@
 package com.example.szamol.quoter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,26 +17,44 @@ public class MainActivity extends AppCompatActivity {
     TextView sentenceView;
     ImageView characterView;
     Button receiveButton;
+    Button statsButton;
     CharacterManager characterManager;
 
     private SharedPreferences preferences;
+
+    private static Context mainContext;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainContext = getApplicationContext();
 
         nameView = findViewById(R.id.nameView);
         sentenceView = findViewById(R.id.sentenceView);
         characterView = findViewById(R.id.characterView);
         receiveButton = findViewById(R.id.recieveButton);
+        statsButton = findViewById(R.id.statsButton);
 
         characterManager = new CharacterManager();
+
         loadSavedCharacter();
 
         preferences = getSharedPreferences("lastReceive", Activity.MODE_PRIVATE);
         receiveButton.setEnabled(isNewSentenceAvailable()); //button enabled ever 20 sec (draft)
 
+        initOnClickButtonListeners();
+
+    }
+
+    @Override
+    protected void onResume() {
+        loadSavedCharacter();
+        receiveButton.setEnabled(isNewSentenceAvailable());
+        super.onResume();
+    }
+
+    private void initOnClickButtonListeners() {
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,26 +66,31 @@ public class MainActivity extends AppCompatActivity {
                 receiveButton.setEnabled(false);
             }
         });
+
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openStatsActivity();
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        loadSavedCharacter();
-        receiveButton.setEnabled(isNewSentenceAvailable());
-        super.onResume();
+    private void openStatsActivity() {
+        Intent intent = new Intent(this, StatsActivity.class);
+        startActivity(intent);
     }
 
     private void loadNewCharacter() {
-        characterManager.setCharacterStrategy(new NewCharacter(getApplicationContext()));
+        characterManager.setNewCharacter();
         nameView.setText(characterManager.getCharacterName());
-        sentenceView.setText(characterManager.getCharacterSentence());
+        sentenceView.setText(characterManager.getCharacterQuote());
         characterView.setImageDrawable(characterManager.getCharacterImage());
     }
 
     private void loadSavedCharacter() {
-        characterManager.setCharacterStrategy(new SavedCharacter(getApplicationContext()));
+        characterManager.setSavedCharacter();
         nameView.setText(characterManager.getCharacterName());
-        sentenceView.setText(characterManager.getCharacterSentence());
+        sentenceView.setText(characterManager.getCharacterQuote());
         characterView.setImageDrawable(characterManager.getCharacterImage());
     }
 
@@ -77,5 +102,9 @@ public class MainActivity extends AppCompatActivity {
             result = true;
         }
         return result;
+    }
+
+    public static Context getMainContext() {
+        return MainActivity.mainContext;
     }
 }
