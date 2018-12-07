@@ -39,7 +39,8 @@ public class Character {
     }
 
     public void loadRandomQuote() {
-        currentQuote = setSentence();
+        Random r = new Random();
+        currentQuote = quotes[r.nextInt(quotes.length)];
     }
 
     public void loadImage() {
@@ -50,11 +51,6 @@ public class Character {
     private Drawable setImage() {
         return MainActivity.getMainContext().getResources().getDrawable(MainActivity.getMainContext().getResources()
                 .getIdentifier(key, "drawable", MainActivity.getMainContext().getPackageName()));
-    }
-
-    private String setSentence() {
-        Random r = new Random();
-        return quotes[r.nextInt(quotes.length)];
     }
 
     public Drawable getImage() {
@@ -71,5 +67,9 @@ public class Character {
 
     public String getKey() {
         return key;
+    }
+
+    public int getAllCharactersQuotes() {
+        return quotes.length;
     }
 }

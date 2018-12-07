@@ -36,6 +36,9 @@ public class CharacterManager {
         currentCharacter = charactersArray[characterId];
         currentCharacter.loadImage();
         currentCharacter.loadRandomQuote();
+
+        Stats.addReceivedQuote(currentCharacter.getQuote());
+
         saveCharacter();
     }
 

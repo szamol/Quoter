@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 editor.putLong("lastReceive", System.currentTimeMillis());
                 editor.apply();
 
+                Stats.incrementReceivedQuotes();
+
                 loadNewCharacter();
                 receiveButton.setEnabled(false);
             }
