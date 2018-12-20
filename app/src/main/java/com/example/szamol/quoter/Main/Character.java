@@ -1,15 +1,9 @@
-package com.example.szamol.quoter;
+package com.example.szamol.quoter.Main;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Character {
@@ -26,7 +20,7 @@ public class Character {
     private String currentQuote;
     private Drawable image;
 
-    Character(String savedName, String savedKey, String savedQuote) {
+    public Character(String savedName, String savedKey, String savedQuote) {
         this.name = savedName;
         this.key = savedKey;
         this.currentQuote = savedQuote;
@@ -69,7 +63,7 @@ public class Character {
         return key;
     }
 
-    public int getAllCharactersQuotes() {
+    public int getAllCharactersQuotesSize() {
         return quotes.length;
     }
 }

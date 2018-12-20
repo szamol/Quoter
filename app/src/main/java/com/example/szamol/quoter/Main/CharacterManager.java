@@ -1,20 +1,18 @@
-package com.example.szamol.quoter;
+package com.example.szamol.quoter.Main;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 
-import com.google.gson.Gson;
+import com.example.szamol.quoter.GsonCharacterReader;
+import com.example.szamol.quoter.Stats.StatsReceivedQuotes;
+import com.example.szamol.quoter.Stats.StatsUnlockedCharacters;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Random;
 
 
 public class CharacterManager {
 
-    private Gson gsonRead = new Gson();
     private Character[] charactersArray;
     private Character currentCharacter;
     private int characterId;
@@ -22,29 +20,31 @@ public class CharacterManager {
     private SharedPreferences preferences;
 
     CharacterManager() {
-        preferences = MainActivity.getMainContext().getSharedPreferences("preferences", Activity.MODE_PRIVATE);
+        preferences = MainActivity.getMainContext().getSharedPreferences("characterPreferences", Activity.MODE_PRIVATE);
     }
 
     public void setNewCharacter() {
-        try {
-            Reader reader = new InputStreamReader(MainActivity.getMainContext().getAssets().open("characters.json"));
-            charactersArray = gsonRead.fromJson(reader, Character[].class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        GsonCharacterReader gcr = new GsonCharacterReader();
+        charactersArray = gcr.getAllCharacters();
+
         characterId = setCharacterId();
         currentCharacter = charactersArray[characterId];
+
+        StatsUnlockedCharacters.addUnlockedCharacter(currentCharacter.getKey());
+
         currentCharacter.loadImage();
         currentCharacter.loadRandomQuote();
 
-        Stats.addReceivedQuote(currentCharacter.getQuote());
-
+        StatsReceivedQuotes.addReceivedQuote(currentCharacter.getQuote());
         saveCharacter();
     }
 
     public void setSavedCharacter() {
-        currentCharacter = new Character(preferences.getString("name", "") ,preferences.getString("key", "gandhi"), preferences.getString("quote", "Odbierz cytat klikając przycisk!"));
-        currentCharacter.loadImage();
+        currentCharacter = new Character(
+                preferences.getString("name", ""),
+                preferences.getString("key", "gandhi"),
+                preferences.getString("quote", "Odbierz cytat klikając przycisk!"));
     }
 
     private int setCharacterId() {
@@ -61,6 +61,7 @@ public class CharacterManager {
     }
 
     public Drawable getCharacterImage() {
+        currentCharacter.loadImage();
         return currentCharacter.getImage();
     }
 

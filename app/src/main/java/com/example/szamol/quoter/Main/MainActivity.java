@@ -1,15 +1,26 @@
-package com.example.szamol.quoter;
+package com.example.szamol.quoter.Main;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.example.szamol.quoter.Boards.BoardsActivity;
+import com.example.szamol.quoter.Boards.CurrentBoard;
+import com.example.szamol.quoter.R;
+import com.example.szamol.quoter.Stats.StatsButtonClicks;
+import com.example.szamol.quoter.Stats.StatsReceivedQuotes;
+import com.example.szamol.quoter.Stats.StatsActivity;
+import com.example.szamol.quoter.Stats.StatsUnlockedCharacters;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView characterView;
     Button receiveButton;
     Button statsButton;
+    Button boardsButton;
     CharacterManager characterManager;
 
     private SharedPreferences preferences;
@@ -28,30 +40,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mainContext = getApplicationContext();
 
-        nameView = findViewById(R.id.nameView);
-        sentenceView = findViewById(R.id.sentenceView);
-        characterView = findViewById(R.id.characterView);
-        receiveButton = findViewById(R.id.recieveButton);
-        statsButton = findViewById(R.id.statsButton);
+        initViewElements();
+        initOnClickButtonListeners();
 
         characterManager = new CharacterManager();
-
+        loadStats();
         loadSavedCharacter();
+        CurrentBoard.loadCurrentBoard(sentenceView);
 
         preferences = getSharedPreferences("lastReceive", Activity.MODE_PRIVATE);
         receiveButton.setEnabled(isNewSentenceAvailable()); //button enabled ever 20 sec (draft)
-
-        initOnClickButtonListeners();
 
     }
 
     @Override
     protected void onResume() {
         loadSavedCharacter();
+        loadStats();
         receiveButton.setEnabled(isNewSentenceAvailable());
+        CurrentBoard.loadCurrentBoard(sentenceView);
         super.onResume();
+    }
+
+    private void initViewElements() {
+        nameView = findViewById(R.id.nameView);
+        sentenceView = findViewById(R.id.sentenceView);
+        characterView = findViewById(R.id.characterView);
+        receiveButton = findViewById(R.id.recieveButton);
+        statsButton = findViewById(R.id.statsButton);
+        boardsButton = findViewById(R.id.boardsButton);
     }
 
     private void initOnClickButtonListeners() {
@@ -62,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.putLong("lastReceive", System.currentTimeMillis());
                 editor.apply();
 
-                Stats.incrementReceivedQuotes();
+                StatsButtonClicks.increment();
 
                 loadNewCharacter();
                 receiveButton.setEnabled(false);
@@ -75,11 +95,25 @@ public class MainActivity extends AppCompatActivity {
                 openStatsActivity();
             }
         });
+
+        boardsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBoardsActivity();
+            }
+        });
     }
 
     private void openStatsActivity() {
         Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
+        Animatoo.animateSlideLeft(this);
+    }
+
+    private void openBoardsActivity() {
+        Intent intent = new Intent(this, BoardsActivity.class);
+        startActivity(intent);
+        Animatoo.animateSlideRight(this);
     }
 
     private void loadNewCharacter() {
@@ -104,6 +138,12 @@ public class MainActivity extends AppCompatActivity {
             result = true;
         }
         return result;
+    }
+
+    private void loadStats() {
+        StatsReceivedQuotes.load();
+        StatsButtonClicks.load();
+        StatsUnlockedCharacters.load();
     }
 
     public static Context getMainContext() {
