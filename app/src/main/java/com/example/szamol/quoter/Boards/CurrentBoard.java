@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
+import com.example.szamol.quoter.GlobalContext;
 import com.example.szamol.quoter.Main.MainActivity;
 
 public class CurrentBoard {
@@ -12,8 +13,8 @@ public class CurrentBoard {
 
     public static void setCurrentBoard(String key) {
         boardKey = key;
-        currentBoard = MainActivity.getMainContext().getResources().getDrawable(MainActivity.getMainContext().getResources()
-                .getIdentifier(key, "drawable", MainActivity.getMainContext().getPackageName()));
+        currentBoard = GlobalContext.getAppContext().getResources().getDrawable(GlobalContext.getAppContext().getResources()
+                .getIdentifier(key, "drawable", GlobalContext.getAppContext().getPackageName()));
     }
 
     public static void loadCurrentBoard(TextView sentenceView) {

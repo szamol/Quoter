@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 
+import com.example.szamol.quoter.GlobalContext;
 import com.example.szamol.quoter.GsonCharacterReader;
 import com.example.szamol.quoter.Stats.StatsReceivedQuotes;
 import com.example.szamol.quoter.Stats.StatsUnlockedCharacters;
@@ -20,7 +21,7 @@ public class CharacterManager {
     private SharedPreferences preferences;
 
     CharacterManager() {
-        preferences = MainActivity.getMainContext().getSharedPreferences("characterPreferences", Activity.MODE_PRIVATE);
+        preferences = GlobalContext.getAppContext().getSharedPreferences("characterPreferences", Activity.MODE_PRIVATE);
     }
 
     public void setNewCharacter() {

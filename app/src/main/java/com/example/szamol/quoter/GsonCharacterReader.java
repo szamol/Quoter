@@ -19,7 +19,7 @@ public class GsonCharacterReader {
 
     private void readCharactersFromGson() {
         try {
-            Reader reader = new InputStreamReader(MainActivity.getMainContext().getAssets().open("characters.json"));
+            Reader reader = new InputStreamReader(GlobalContext.getAppContext().getAssets().open("characters.json"));
             allCharacters = gsonRead.fromJson(reader, Character[].class);
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.example.szamol.quoter.Main;
 
 import android.graphics.drawable.Drawable;
 
+import com.example.szamol.quoter.GlobalContext;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Random;
@@ -43,8 +44,8 @@ public class Character {
 
 
     private Drawable setImage() {
-        return MainActivity.getMainContext().getResources().getDrawable(MainActivity.getMainContext().getResources()
-                .getIdentifier(key, "drawable", MainActivity.getMainContext().getPackageName()));
+        return GlobalContext.getAppContext().getResources().getDrawable(GlobalContext.getAppContext().getResources()
+                .getIdentifier(key, "drawable", GlobalContext.getAppContext().getPackageName()));
     }
 
     public Drawable getImage() {

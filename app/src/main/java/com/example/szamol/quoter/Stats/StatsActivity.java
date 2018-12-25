@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.szamol.quoter.Main.MainActivity;
 import com.example.szamol.quoter.R;
-import com.example.szamol.quoter.Stats.StatsAllQuotes;
-import com.example.szamol.quoter.Stats.StatsButtonClicks;
-import com.example.szamol.quoter.Stats.StatsReceivedQuotes;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -26,7 +23,7 @@ public class StatsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
-
+        hideSystemUI();
         initViewElements();
 
         StatsReceivedQuotes.load();
@@ -35,7 +32,7 @@ public class StatsActivity extends AppCompatActivity {
 
         totalQuotesView.setText(StatsAllQuotes.getTotalQuotesString());
         numberOfReceivedQuotesView.setText(StatsButtonClicks.getNumberOfReceiveButtonClicksString());
-        percentOfUniqueReceivedQuotesView.setText(StatsReceivedQuotes.getPercentOfUniqueRecivedQuotes());
+        percentOfUniqueReceivedQuotesView.setText(StatsReceivedQuotes.getPercentOfUniqueReceivedQuotes());
         unlockedCharactersView.setText(StatsUnlockedCharacters.getUnlockedCharactersNumber());
         initOnClickListeners();
     }
@@ -43,6 +40,7 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        hideSystemUI();
     }
 
 
@@ -59,6 +57,7 @@ public class StatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 backToMainActivity();
+                finish();
             }
         });
     }
@@ -67,5 +66,19 @@ public class StatsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         Animatoo.animateSlideRight(this);
+    }
+
+    private void hideSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 }

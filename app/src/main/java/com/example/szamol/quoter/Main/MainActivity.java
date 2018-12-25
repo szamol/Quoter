@@ -1,11 +1,6 @@
 package com.example.szamol.quoter.Main;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.szamol.quoter.Boards.BoardsActivity;
 import com.example.szamol.quoter.Boards.CurrentBoard;
 import com.example.szamol.quoter.R;
@@ -25,23 +22,21 @@ import com.example.szamol.quoter.Stats.StatsUnlockedCharacters;
 public class MainActivity extends AppCompatActivity {
 
     TextView nameView;
-    TextView sentenceView;
+    TextView quoteView;
     ImageView characterView;
     Button receiveButton;
     Button statsButton;
     Button boardsButton;
     CharacterManager characterManager;
 
-    private SharedPreferences preferences;
 
-    private static Context mainContext;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainContext = getApplicationContext();
+        hideSystemUI();
 
         initViewElements();
         initOnClickButtonListeners();
@@ -49,25 +44,24 @@ public class MainActivity extends AppCompatActivity {
         characterManager = new CharacterManager();
         loadStats();
         loadSavedCharacter();
-        CurrentBoard.loadCurrentBoard(sentenceView);
+        CurrentBoard.loadCurrentBoard(quoteView);
 
-        preferences = getSharedPreferences("lastReceive", Activity.MODE_PRIVATE);
-        receiveButton.setEnabled(isNewSentenceAvailable()); //button enabled ever 20 sec (draft)
-
+        receiveButton.setEnabled(TimeSaver.isQuoteReady()); //button enabled ever 20 sec (draft)
     }
 
     @Override
     protected void onResume() {
+        hideSystemUI();
         loadSavedCharacter();
         loadStats();
-        receiveButton.setEnabled(isNewSentenceAvailable());
-        CurrentBoard.loadCurrentBoard(sentenceView);
+        receiveButton.setEnabled(TimeSaver.isQuoteReady());
+        CurrentBoard.loadCurrentBoard(quoteView);
         super.onResume();
     }
 
     private void initViewElements() {
         nameView = findViewById(R.id.nameView);
-        sentenceView = findViewById(R.id.sentenceView);
+        quoteView = findViewById(R.id.sentenceView);
         characterView = findViewById(R.id.characterView);
         receiveButton = findViewById(R.id.recieveButton);
         statsButton = findViewById(R.id.statsButton);
@@ -78,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong("lastReceive", System.currentTimeMillis());
-                editor.apply();
+                TimeSaver.saveTime();
 
                 StatsButtonClicks.increment();
 
                 loadNewCharacter();
                 receiveButton.setEnabled(false);
+                animateNewQuote();
+                TimeSaver.setNotification();
             }
         });
 
@@ -93,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openStatsActivity();
+                finish();
             }
         });
 
@@ -100,8 +95,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openBoardsActivity();
+                finish();
             }
         });
+    }
+
+    private void animateNewQuote() {
+        YoYo.with(Techniques.DropOut).duration(1500).playOn(nameView);
+        YoYo.with(Techniques.Tada).duration(1500).delay(1000).playOn(quoteView);
+        YoYo.with(Techniques.FadeInRight).duration(1500).playOn(characterView);
     }
 
     private void openStatsActivity() {
@@ -119,25 +121,16 @@ public class MainActivity extends AppCompatActivity {
     private void loadNewCharacter() {
         characterManager.setNewCharacter();
         nameView.setText(characterManager.getCharacterName());
-        sentenceView.setText(characterManager.getCharacterQuote());
+        quoteView.setText(characterManager.getCharacterQuote());
+        characterView.setImageDrawable(null);
         characterView.setImageDrawable(characterManager.getCharacterImage());
     }
 
     private void loadSavedCharacter() {
         characterManager.setSavedCharacter();
         nameView.setText(characterManager.getCharacterName());
-        sentenceView.setText(characterManager.getCharacterQuote());
+        quoteView.setText(characterManager.getCharacterQuote());
         characterView.setImageDrawable(characterManager.getCharacterImage());
-    }
-
-    private boolean isNewSentenceAvailable() {
-        boolean result = false;
-        long lastReceive = preferences.getLong("lastReceive", 0);
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastReceive > 20000) {
-            result = true;
-        }
-        return result;
     }
 
     private void loadStats() {
@@ -146,7 +139,19 @@ public class MainActivity extends AppCompatActivity {
         StatsUnlockedCharacters.load();
     }
 
-    public static Context getMainContext() {
-        return MainActivity.mainContext;
+    private void hideSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
+
 }

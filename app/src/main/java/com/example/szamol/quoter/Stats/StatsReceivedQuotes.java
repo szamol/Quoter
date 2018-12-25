@@ -16,9 +16,9 @@ public class StatsReceivedQuotes {
         StatsSaver.saveSetOfReceivedQuotes(receivedQuotes);
     }
 
-    public static String getPercentOfUniqueRecivedQuotes() {
+    public static String getPercentOfUniqueReceivedQuotes() {
         double receivedQuotesNumber = receivedQuotes.size();
         DecimalFormat df = new DecimalFormat("0.00");
-        return df.format(receivedQuotesNumber / StatsAllQuotes.getTotalQuotes()) + " %";
+        return df.format((receivedQuotesNumber / StatsAllQuotes.getTotalQuotes()) * 100) + " %";
     }
 }
