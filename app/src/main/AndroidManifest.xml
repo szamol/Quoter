@@ -21,16 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Main.MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".Stats.StatsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Boards.BoardsActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".Help.HelpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUpStyle"/>
 
         <receiver android:name=".Main.QuoteNotification" />
 

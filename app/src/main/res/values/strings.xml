@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Quoter</string>
+    <string name="receive"><b>Odbierz</b></string>
+    <string name="help_part1">Witaj w aplikacji <b>Quoter</b>, która pozwala Ci odebrać cytaty ludzi, którzy mieli coś do powiedzenia...\n</string>
+    <string name="help_part2">Cytaty możliwe są do odebrania raz na 12 godzin. W tym panelu dowiesz się, jak obsługiwać aplikację.\n</string>
+    <string name="help_title1"><u>Zakładki</u></string>
+    <string name="help_home"> - serce aplikacji. Tutaj możesz odbierać cytaty.\n</string>
+    <string name="help_frame">- ta zakładka pozwala zmienić wygląd tablicy.\n</string>
+    <string name="help_arrow">- zakładka w której obejrzysz swoje statystyki.\n</string>
+    <string name="help_title2"><u>Przyciski(1)</u></string>
+    <string name="help_part3">Istnieją dwa stany przycisku głównego:\n</string>
+    <string name="help_button_true">- ten przycisk jest aktywny. Cytat gotowy!</string>
+    <string name="help_button_false">- przycisk nieaktywny. Musisz czekać.</string>
+    <string name="help_title3"><u>Przyciski(2)</u></string>
+    <string name="help_part4">Przyciski dodatkowe:</string>
+    <string name="help_clipboard">- tym przyciskiem skopiujesz cytat schowka.</string>
+    <string name="help_help">- ten przycisk ponownie wyświetli panel pomocy.</string>
+    <string name="help_end">Załoga aplikacji <b>Quoter</b> życzy dobrej zabawy!</string>
 </resources>

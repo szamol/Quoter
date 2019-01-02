@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
 import com.example.szamol.quoter.GlobalContext;
-import com.example.szamol.quoter.Main.MainActivity;
 
 public class CurrentBoard {
     private static Drawable currentBoard;

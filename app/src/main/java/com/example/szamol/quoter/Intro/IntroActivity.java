@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.example.szamol.quoter.Main.MainActivity;
+import com.example.szamol.quoter.MainActivity;
 import com.example.szamol.quoter.R;
 
 public class IntroActivity extends AppCompatActivity {

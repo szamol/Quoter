@@ -9,10 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
+import com.example.szamol.quoter.Intro.IntroActivity;
 import com.example.szamol.quoter.R;
 
 public class QuoteNotification extends BroadcastReceiver {
@@ -32,7 +31,7 @@ public class QuoteNotification extends BroadcastReceiver {
         }
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(context, IntroActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder = builder
                 .setSmallIcon(R.drawable.schopenhauer).setColor(Color.BLACK)

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 
 import com.example.szamol.quoter.GlobalContext;
-import com.example.szamol.quoter.Main.MainActivity;
 
 import java.util.HashSet;
 import java.util.Set;

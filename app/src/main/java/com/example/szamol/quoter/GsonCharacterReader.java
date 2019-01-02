@@ -1,7 +1,6 @@
 package com.example.szamol.quoter;
 
 import com.example.szamol.quoter.Main.Character;
-import com.example.szamol.quoter.Main.MainActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
